@@ -1,0 +1,38 @@
+{
+  "name": "seneca-admin",
+  "version": "0.1.1",
+  "description": "Administration plugin for Seneca deployments",
+  "main": "admin.js",
+  "scripts": {
+    "test": "node admin.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/rjrodger/seneca-admin.git"
+  },
+  "keywords": [
+    "seneca",
+    "admin",
+    "administration",
+    "plugin"
+  ],
+  "author": "Richard Rodger (http://richardrodger.com)",
+  "license": "MIT",
+  "dependencies": {
+    "underscore": "~1.5.1",
+    "async": "~0.2.9",
+    "connect": "~2.8.8"
+  },
+  "devDependencies": {
+    "gex": "~0.1.1",
+    "chai": "~1.7.2",
+    "async": "~0.2.5",
+    "seneca": "~0.5.11",
+    "seneca-user": "~0.2.2"
+  },
+  "files": [
+    "README.md",
+    "LICENSE.txt",
+    "admin.js"
+  ]
+}
