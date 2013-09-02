@@ -21,7 +21,8 @@
   "dependencies": {
     "underscore": "~1.5.1",
     "async": "~0.2.9",
-    "connect": "~2.8.8"
+    "connect": "~2.8.8",
+    "nid": "~0.3.0"
   },
   "devDependencies": {
     "gex": "~0.1.1",
@@ -33,6 +34,7 @@
   "files": [
     "README.md",
     "LICENSE.txt",
-    "admin.js"
+    "admin.js",
+    "web"
   ]
 }
