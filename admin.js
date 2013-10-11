@@ -76,6 +76,12 @@ module.exports = function( options ) {
     seneca.act({role:'web',use:function(req,res,next){
       if( 0 != req.url.indexOf(options.prefix) ) return next();
 
+      if( options.prefix === req.url && '/' !== req.url[req.url.length-1] ) {
+        res.writeHead(301,{Location:req.url+'/'})
+        res.end()
+        return
+      }
+
       if( req.seneca && req.seneca.user && req.seneca.user.admin ) {
         next();
       }
