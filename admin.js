@@ -50,7 +50,7 @@ module.exports = function( options ) {
           return user.save$(next)
         }
 
-        userdata.password = makepass()
+        userdata.password = _.isString(options.user.password) ? options.user.password : makepass()
 
         useract.register( userdata, function(err,out){
           if( err ) return done(err);
@@ -73,27 +73,33 @@ module.exports = function( options ) {
     var app = connect()
     app.use(connect.static(__dirname+'/web'))
 
-    seneca.act({role:'web',use:function(req,res,next){
-      if( 0 != req.url.indexOf(options.prefix) ) return next();
+    seneca.act({
+      role:'web',
+      plugin:name,
+      config:{prefix:options.prefix},
+      use:function(req,res,next){
+        if( 0 != req.url.indexOf(options.prefix) ) return next();
 
-      if( options.prefix === req.url && '/' !== req.url[req.url.length-1] ) {
-        res.writeHead(301,{Location:req.url+'/'})
-        res.end()
-        return
-      }
+        if( options.prefix === req.url && '/' !== req.url[req.url.length-1] ) {
+          res.writeHead(301,{Location:req.url+'/'})
+          res.end()
+          return
+        }
 
-      if( req.seneca && req.seneca.user && req.seneca.user.admin ) {
-        next();
-      }
-      else {
         req.url = req.url.replace(/^\/admin/,"")
+        var adminuser = req.seneca && req.seneca.user && req.seneca.user.admin
+        if( !adminuser ) {
+        
+          if( '/'==req.url || 0 == req.url.indexOf('/index') ) {
+            req.url = '/login.html'
+          }
+        }
+
         return app( req, res );
       }
-    }})
+    })
   }
 
 
-  return {
-    name: name
-  }
+  return name;
 }

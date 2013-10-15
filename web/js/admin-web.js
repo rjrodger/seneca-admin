@@ -1,4 +1,9 @@
 ;(function(){
+  var root = this
+  var seneca = root.seneca
+  var prefix = (seneca.config.admin ? seneca.config.admin.prefix : null ) || '/admin'
+  console.log(prefix)
+
   function noop(){for(var i=0;i<arguments.length;i++)if('function'==typeof(arguments[i]))arguments[i]()}
   function empty(val) { return null == val || 0 == ''+val }
 
@@ -27,7 +32,7 @@
         $http({method:'POST', url: '/auth/login', data:creds, cache:false}).
           success(function(data, status) {
             if( win ) return win(data);
-            return $window.location.href='/account'
+            return $window.location.href=prefix
           }).
           error(function(data, status) {
             if( fail ) return fail(data);
@@ -138,7 +143,7 @@
 
 
     $scope.goaccount = function() {
-      window.location.href='/account'
+      window.location.href=prefix
     }
 
 
@@ -164,6 +169,46 @@
     })
   })
 
-})();
+
+  home_module.controller('MainPanel', function($scope, $compile, $element) {
+
+    $scope.dirs = ['foo','bar']
+    $scope.x = '1'
+    $scope.y = '1'
+
+    _.each($scope.dirs, function(dir){
+      $element.append( $compile('<div '+dir+'></div>')($scope) )
+    })
+  })
+
+
+
+  home_module.directive('foo', [function() {
+    var def = {
+      scope:{},
+      link: function( scope ){
+        scope.msg = 'foo'
+        scope.x = '2'
+      },
+      template: "<b>F:{{msg}}, {{x}}{{y}}</b>"
+    }
+    return def
+  }])
+
+  home_module.directive('bar', [function() {
+    var def = {
+      scope:{},
+      link: function( scope ){
+        scope.x = '3'
+        scope.msg = 'bar'
+      },
+      template: "<b>B:{{msg}}, {{x}}{{y}}</b>"
+    }
+    return def
+  }])
+
+
+
+}).call(this);
 
 
