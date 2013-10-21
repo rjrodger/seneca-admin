@@ -1,0 +1,17 @@
+<style>
+ul.admin-status-summary { margin-bottom: 15px; } 
+ul.admin-status-summary li { display: inline-block; padding: 10px; margin-right: 15px; font-weight:bold;}
+ul.admin-status-summary li span { font-size:1.4em; line-height:1em; margin-left:10px; font-weight: normal;}
+</style>
+<ul class="list-group admin-status-summary">
+  <li class="list-group-item">running <span class="label label-default">{{running}}</span></li>
+  <li class="list-group-item">started <span class="label label-default">{{start}}</span></li>
+  <li class="list-group-item">server time <span class="label label-default">{{now}}</span></li>
+</ul>
+<ul class="list-group admin-status-summary">
+  <li class="list-group-item">actions called <span class="label label-primary">{{act.calls}}</span></li>
+  <li class="list-group-item">actions completed <span class="label label-success">{{act.done}}</span></li>
+  <li class="list-group-item">actions failed <span class="label label-danger">{{act.fails}}</span></li>
+</ul>
+
+
