@@ -13,13 +13,15 @@
       [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
       display: none !important;
       }
+
+      div.admin_panel_hide { position: absolute; left: -99999px; }
     </style>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/animate.css" rel="stylesheet">
 
+    <link href="/seneca/bootstrap.min.css" rel="stylesheet">
+    <link href="/seneca/animate.css" rel="stylesheet">
 
-    <link href="css/mvp.css" rel="stylesheet">
+    <link href="/data-editor/data-editor.css" rel="stylesheet">
 
     <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!--[if lt IE 9]>
@@ -42,14 +44,23 @@
 
       <br>
 
-      <div class="row" ng-controller="MainPanel">
-
+      <div ng-controller="TabView">
+      <ul class="nav nav-tabs">
+        <li ng-repeat="view in views" ng-class="{active:view.name==curtab}"><a ng-click="tabview(view.name)">{{view.title}}</a></li>
+      </ul>
       </div>
 
-      <hr>
-      <div foo></div>
-      <div bar></div>
-      {{msg}}
+      <br>
+
+      <style>
+        div.seneca-data-editor-main {
+        margin: 15px;
+        }
+      </style>
+
+      <div class="row" ng-controller="MainPanel" style="height:2000px">
+
+      </div>
 
     </div>
     </div>
@@ -62,15 +73,31 @@
       </div>
     </footer>
 
-    <script src="js/underscore-1.5.2.js"></script>
-    <script src="js/jquery-2.0.0.js"></script>
-    <script src="js/bootstrap-v3.0.0.js"></script>
-    <script src="js/angular-1.2.0.rc2.js"></script>
-    <script src="js/angular-route-1.2.0.rc2.js"></script>
-    <script src="js/cookies-0.0.1.js"></script>
+    <script src="/seneca/underscore-1.5.2.js"></script>
+    <script src="/seneca/jquery-2.0.0.js"></script>
+    <script src="/seneca/bootstrap-v3.0.0.js"></script>
+    <script src="/seneca/angular-1.2.0.rc2.js"></script>
+    <script src="/seneca/angular-route-1.2.0.rc2.js"></script>
+    <script src="/seneca/moment-2.3.1.min.js"></script>
+
 
     <script src="/seneca/init.js"></script>
-    <script src="js/admin-web.js"></script>
+
+    <!-- TODO: should be dynamic -->
+    <script src="/data-editor/tagx.js"></script>
+    <script src="/data-editor/ng-grid.js"></script>
+    <script src="/data-editor/jquery.jsoneditor.js"></script>
+    <script src="/data-editor/data-editor-ng.js"></script>
+
+    <script src="jsonic.0.1.1.min.js"></script>
+    <script src="sockjs.min.js"></script>
+
+    <script src="admin-summary.js"></script>
+    <script src="admin-plugins.js"></script>
+    <script src="admin-action.js"></script>
+    <script src="admin-logging.js"></script>
+
+    <script src="admin-web.js"></script>
   </body>
 </html>
 
