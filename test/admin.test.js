@@ -31,6 +31,7 @@ function cberr(win){
 
 var si = seneca()
 si.use( 'user' )
+si.use( 'data-editor' )
 si.use( '..' )
 
 var userent = si.make$('sys/user')

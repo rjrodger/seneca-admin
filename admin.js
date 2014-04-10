@@ -29,8 +29,14 @@ module.exports = function( options ) {
       {name:'admin-plugins', title:'Action Patterns', ng:{module:'senecaAdminPluginsModule', directive:'seneca-admin-plugins'}},
       {name:'admin-logging', title:'Streaming Log',   ng:{module:'senecaAdminLoggingModule', directive:'seneca-admin-logging'}},
       {name:'admin-action',  title:'Action Executor', ng:{module:'senecaAdminActionModule',  directive:'seneca-admin-action'}},
-    ]
+    ],
+    local:false
   }
+
+  // needed for now until this is made optional in client code
+  seneca.depends(plugin,[
+    'data-editor'
+  ])
 
   if( seneca.hasplugin('data-editor') ) {
     defaultoptions.units.push( 
