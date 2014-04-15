@@ -3,6 +3,7 @@
 
 
 var buffer  = require('buffer')
+var fs      = require('fs')
 
 var _       = require('underscore')
 var async   = require('async')
@@ -24,24 +25,30 @@ module.exports = function( options ) {
     web:true,
     prefix:'/admin',
     user:{nick:'admin'},
-    units:[
-      {name:'admin-summary', title:'Status Summary',  ng:{module:'senecaAdminSummaryModule', directive:'seneca-admin-summary'}},
-      {name:'admin-plugins', title:'Action Patterns', ng:{module:'senecaAdminPluginsModule', directive:'seneca-admin-plugins'}},
-      {name:'admin-logging', title:'Streaming Log',   ng:{module:'senecaAdminLoggingModule', directive:'seneca-admin-logging'}},
-      {name:'admin-action',  title:'Action Executor', ng:{module:'senecaAdminActionModule',  directive:'seneca-admin-action'}},
-    ],
+    units:['admin-summary','admin-plugins','admin-logging','admin-action'],
+    unitspecs:{
+      'admin-summary': {title:'Status Summary',  ng:{module:'senecaAdminSummaryModule', directive:'seneca-admin-summary'}},
+      'admin-plugins': {title:'Action Patterns', ng:{module:'senecaAdminPluginsModule', directive:'seneca-admin-plugins'}},
+      'admin-logging': {title:'Streaming Log',   ng:{module:'senecaAdminLoggingModule', directive:'seneca-admin-logging'}},
+      'admin-action':  {title:'Action Executor', ng:{module:'senecaAdminActionModule',  directive:'seneca-admin-action'}},
+    },
+    unitcontent:{
+      'admin-summary': [{type:'js',file:__dirname+'/web/admin-summary.js'}],
+      'admin-plugins': [{type:'js',file:__dirname+'/web/admin-plugins.js'}],
+      'admin-logging': [{type:'js',file:__dirname+'/web/admin-logging.js'}],
+      'admin-action':  [{type:'js',file:__dirname+'/web/admin-action.js'}],
+    },
+    mimetype:{
+      js:'text/javascript',
+      css:'text/css'
+    },
     local:false
   }
 
-  // needed for now until this is made optional in client code
+  // TODO: is this needed?
   seneca.depends(plugin,[
     'data-editor'
   ])
-
-  if( seneca.hasplugin('data-editor') ) {
-    defaultoptions.units.push( 
-      {name:'data-editor', title:'Data Editor',ng:{module:'senecaDataEditorModule',directive:'seneca-data-editor'}} )
-  }
 
   options = seneca.util.deepextend(defaultoptions,options)
 
@@ -58,20 +65,28 @@ module.exports = function( options ) {
 
   var useract    = seneca.pin( { role:'user', cmd:'*' } )
 
+  var content = {}
 
 
   seneca.add({role:plugin,cmd:'stats'},cmd_stats)
+  seneca.add({role:plugin,cmd:'webstats'},cmd_webstats)
 
 
   function cmd_stats(args,done) {
     seneca.act('role:seneca,stats:true',{summary:args.summary},done)
   }
 
+  function cmd_webstats(args,done) {
+    seneca.act('role:web,stats:true',done)
+  }
+
 
 
   seneca.add({init:plugin}, function( args, done ){
+    var seneca = this
+
     if( seneca.hasplugin('user') ) setup_users();
-    else return done();
+    else return loadcontent();
 
     function setup_users() {
       var users = _.isArray(options.user) ? options.user : [options.user]
@@ -100,7 +115,49 @@ module.exports = function( options ) {
 
       }, function(err){
         if( err ) return done(err);
-        return done();
+        return loadcontent();
+      })
+    }
+
+    function loadcontent() {
+
+      seneca.act({role:'util',note:true,cmd:'list',key:'admin/units'}, function(err,out){
+        if(err) return done(err);
+
+        if( out ) {
+          _.each( out, function(unitdef) {
+            if( unitdef.unit && unitdef.spec && unitdef.content ) {
+              options.units.push(unitdef.unit)
+              options.unitspecs[unitdef.unit] = unitdef.spec
+              options.unitcontent[unitdef.unit] = unitdef.content
+            }
+          })
+
+          seneca.act({
+            role:'web',
+            plugin:plugin,
+            config:{
+              prefix:options.prefix,
+              units:options.units,
+              unitspecs:options.unitspecs
+            }})
+        }
+
+
+        console.dir(options)
+
+        async.mapSeries(options.units,function(name,next){
+          var items = options.unitcontent[name]
+          async.mapSeries(items||[],function(item,next){
+            var text = content[item.type] || ''
+            fs.readFile(item.file,function(err,data){
+              if(err) return next(err);
+              text += '\n;\n' + data
+              content[item.type] = text
+              return next()
+            })
+          }, next)
+        }, done)
       })
     }
   })
@@ -192,7 +249,8 @@ module.exports = function( options ) {
       plugin:plugin,
       config:{
         prefix:options.prefix,
-        units:options.units
+        units:options.units,
+        unitspecs:options.unitspecs
       },
       use:{
         startware:function(req,res,next){
@@ -232,12 +290,24 @@ module.exports = function( options ) {
             })
 
           }
+          else if( 0 == req.url.indexOf(options.prefix+'/content/') ) {
+            var type = req.url.substring( (options.prefix+'/content/').length )
+            var text = content[type] || ''
+
+            res.writeHead(200,{
+              'Content-Type':   (options.mimetype[type]||'text/plain'),
+              'Cache-Control':  'private, max-age=0, no-cache, no-store',
+              'Content-Length': buffer.Buffer.byteLength(text) 
+            })
+            res.end( text )
+          }
           else return next();
         },
         pin:{role:plugin,cmd:'*'},
         prefix:'/admin',
         map:{
-          stats:true
+          stats:true,
+          webstats:true
         },
         endware:function(req,res,next){
           if( 0 != req.url.indexOf(options.prefix) ) return next();
@@ -251,6 +321,7 @@ module.exports = function( options ) {
     })
   }
  
+
 
   return plugin;
 }

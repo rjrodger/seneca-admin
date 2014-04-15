@@ -11,13 +11,14 @@
 
 
   initModule({
-    units:config.units
+    units:config.units,
+    unitspecs:config.unitspecs
   })
 
 
   function initModule( config ) {
 
-    var submods = _.map( config.units, function(unit){ return unit.ng.module })
+    var submods = _.map( config.units, function(unit){ return config.unitspecs[unit].ng.module })
     console.log(''+submods)
 
     var home_module = angular.module('home',submods)
@@ -67,8 +68,9 @@
     home_module.controller('TabView', function($scope,$rootScope) {
       var views = []
 
-      _.each( config.units, function(unit){
-        var v = {title:unit.title,name:unit.name.replace(/-/g,'_')}
+      _.each( config.units, function(unitname){
+        var unit = config.unitspecs[unitname]
+        var v = {title:unit.title,name:unitname.replace(/-/g,'_')}
         views.push( v )
       })
 
@@ -77,11 +79,16 @@
 
       $scope.tabview = function( name ){
         tabview.show( name )
-        $scope.curtab = name
 
+        var oldtab = $scope.curtab
+        $scope.curtab = name
 
         var eventname = 'seneca-admin/unit/'+name.replace(/_/g,'-')+'/view'
         $rootScope.$emit(eventname,[])
+
+        eventname = 'seneca-admin/unit/'+oldtab.replace(/_/g,'-')+'/hide'
+        $rootScope.$emit(eventname,[])
+
         if( 'data-editor' == name ) {
           $rootScope.$emit('seneca-data-editor/show-ents')
         }
@@ -92,10 +99,11 @@
 
     home_module.controller('MainPanel', function($scope, $compile, $element) {
       
-      var directives = _.map( config.units, function(unit){ 
-        $scope['hide_view_'+unit.name.replace(/-/g,'_')] = true
+      var directives = _.map( config.units, function(unitname){ 
+        var unit = config.unitspecs[unitname]
+        $scope['hide_view_'+unitname.replace(/-/g,'_')] = true
 
-        return {name:unit.name.replace(/-/g,'_'),ref:unit.ng.directive,title:unit.title} 
+        return {name:unitname.replace(/-/g,'_'),ref:unit.ng.directive,title:unit.title} 
       })
 
       _.each(directives, function(dir){
