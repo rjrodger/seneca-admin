@@ -61,9 +61,6 @@ module.exports = function( options ) {
 
 
  
-  var userent    = seneca.make$( 'sys/user' )
-
-  var useract    = seneca.pin( { role:'user', cmd:'*' } )
 
   var content = {}
 
@@ -89,7 +86,11 @@ module.exports = function( options ) {
     else return loadcontent();
 
     function setup_users() {
+      var userent = seneca.make$( 'sys/user' )
+      var useract = seneca.pin( { role:'user', cmd:'*' } )
+
       var users = _.isArray(options.user) ? options.user : [options.user]
+
       async.mapSeries(users, function(userdata,next) {
         userdata.admin = true
 
@@ -143,8 +144,6 @@ module.exports = function( options ) {
             }})
         }
 
-
-        console.dir(options)
 
         async.mapSeries(options.units,function(name,next){
           var items = options.unitcontent[name]
