@@ -29,7 +29,13 @@ function cberr(win){
 
 
 
-var si = seneca()
+var si = seneca({trace_act_OFF:function(){
+  var args = Array.prototype.slice.call(arguments,0)
+  args.unshift(Date.now())
+  var e = new Error()
+  args.push(e.stack)
+  console.log(args.join(' '))
+}})
 si.use( 'user' )
 si.use( 'data-editor' )
 si.use( '..' )
@@ -43,7 +49,6 @@ describe('admin', function() {
   
   it('happy', function( fin ) {
     si.ready( function() {    
-
       userent.list$({admin:true},cberr(function(list){
         assert( 0 < list.length )
         fin()

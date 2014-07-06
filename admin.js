@@ -5,11 +5,12 @@
 var buffer  = require('buffer')
 var fs      = require('fs')
 
-var _       = require('underscore')
-var async   = require('async')
-var connect = require('connect')
-var sockjs  = require('sockjs')
-var nid     = require('nid')
+var _            = require('underscore')
+var async        = require('async')
+var connect      = require('connect')
+var serve_static = require('serve-static')
+var sockjs       = require('sockjs')
+var nid          = require('nid')
 
 
 var makepass = require('nid')({length:10})
@@ -122,7 +123,7 @@ module.exports = function( options ) {
 
     function loadcontent() {
 
-      seneca.act({role:'util',note:true,cmd:'list',key:'admin/units'}, function(err,out){
+      seneca.act({role:'util',note:true,cmd:'list',key:'admin/units',default$:{}}, function(err,out){
         if(err) return done(err);
 
         if( out ) {
@@ -241,7 +242,7 @@ module.exports = function( options ) {
 
 
     var app = connect()
-    app.use(connect.static(__dirname+'/web'))
+    app.use(serve_static(__dirname+'/web'))
 
     seneca.act({
       role:'web',
