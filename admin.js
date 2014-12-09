@@ -1,7 +1,6 @@
 /* Copyright (c) 2013 Richard Rodger, MIT License */
 "use strict";
 
-
 var buffer  = require('buffer')
 var fs      = require('fs')
 
@@ -304,7 +303,7 @@ module.exports = function( options ) {
           else return next();
         },
         pin:{role:plugin,cmd:'*'},
-        prefix:'/admin',
+        prefix:options.prefix,
         map:{
           stats:true,
           webstats:true
@@ -314,7 +313,7 @@ module.exports = function( options ) {
 
           if( 0 == req.url.indexOf(options.prefix+'/socket') ) return next();
 
-          req.url = req.url.replace(/^\/admin/,"")
+          req.url = req.url.replace(options.prefix,"")
           return app( req, res );
         }
       }
