@@ -4,13 +4,13 @@
 // mocha admin.test.js
 
 
-var seneca  = require('seneca')
+var seneca  = require('seneca');
 
-var assert  = require('chai').assert
+var assert  = require('chai').assert;
 
-var gex     = require('gex')
-var async   = require('async')
-var _       = require('underscore')
+var gex     = require('gex');
+var async   = require('async');
+var _       = require('lodash');
 
 
 
@@ -31,16 +31,16 @@ function cberr(win){
 
 var si = seneca({trace_act_OFF:function(){
   var args = Array.prototype.slice.call(arguments,0)
-  args.unshift(Date.now())
-  var e = new Error()
-  args.push(e.stack)
-  console.log(args.join(' '))
-}})
-si.use( 'user' )
-si.use( 'data-editor' )
-si.use( '..' )
+  args.unshift(Date.now());
+  var e = new Error();
+  args.push(e.stack);
+  console.log(args.join(' '));
+}});
+si.use( 'user' );
+si.use( 'data-editor' );
+si.use( '..' );
 
-var userent = si.make$('sys/user')
+var userent = si.make$('sys/user');
 
 
 
@@ -50,11 +50,11 @@ describe('admin', function() {
   it('happy', function( fin ) {
     si.ready( function() {    
       userent.list$({admin:true},cberr(function(list){
-        assert( 0 < list.length )
-        fin()
-      }))
-    })
-  })
-})
+        assert( 0 < list.length );
+        fin();
+      }));
+    });
+  });
+});
 
 

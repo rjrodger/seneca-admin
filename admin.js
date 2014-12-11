@@ -1,24 +1,21 @@
 /* Copyright (c) 2013 Richard Rodger, MIT License */
 "use strict";
 
-var buffer  = require('buffer')
-var fs      = require('fs')
+var buffer  = require('buffer');
+var fs      = require('fs');
 
-var _            = require('underscore')
-var async        = require('async')
-var connect      = require('connect')
-var serve_static = require('serve-static')
-var sockjs       = require('sockjs')
-var nid          = require('nid')
+var _            = require('lodash');
+var async        = require('async');
+var connect      = require('connect');
+var serve_static = require('serve-static');
+var sockjs       = require('sockjs');
+var nid          = require('nid');
 
-
-var makepass = require('nid')({length:10})
-
-
+var makepass = require('nid')({length:10});
 
 module.exports = function( options ) {
-  var seneca = this
-  var plugin = 'admin'
+  var seneca = this;
+  var plugin = 'admin';
 
 
   var defaultoptions = {
@@ -43,12 +40,12 @@ module.exports = function( options ) {
       css:'text/css'
     },
     local:false
-  }
+  };
 
   // TODO: is this needed?
   seneca.depends(plugin,[
     'data-editor'
-  ])
+  ]);
 
   options = seneca.util.deepextend(defaultoptions,options)
 
@@ -62,37 +59,37 @@ module.exports = function( options ) {
 
  
 
-  var content = {}
+  var content = {};
 
 
-  seneca.add({role:plugin,cmd:'stats'},cmd_stats)
-  seneca.add({role:plugin,cmd:'webstats'},cmd_webstats)
+  seneca.add({role:plugin,cmd:'stats'},cmd_stats);
+  seneca.add({role:plugin,cmd:'webstats'},cmd_webstats);
 
 
   function cmd_stats(args,done) {
-    seneca.act('role:seneca,stats:true',{summary:args.summary},done)
+    seneca.act('role:seneca,stats:true',{summary:args.summary},done);
   }
 
   function cmd_webstats(args,done) {
-    seneca.act('role:web,stats:true',done)
+    seneca.act('role:web,stats:true',done);
   }
 
 
 
   seneca.add({init:plugin}, function( args, done ){
-    var seneca = this
+    var seneca = this;
 
     if( seneca.hasplugin('user') ) setup_users();
     else return loadcontent();
 
     function setup_users() {
-      var userent = seneca.make$( 'sys/user' )
-      var useract = seneca.pin( { role:'user', cmd:'*' } )
+      var userent = seneca.make$( 'sys/user' );
+      var useract = seneca.pin( { role:'user', cmd:'*' } );
 
-      var users = _.isArray(options.user) ? options.user : [options.user]
+      var users = _.isArray(options.user) ? options.user : [options.user];
 
       async.mapSeries(users, function(userdata,next) {
-        userdata.admin = true
+        userdata.admin = true;
 
         userent.load$({nick:userdata.nick}, function(err,user){
           if( err ) return done(err);
@@ -100,16 +97,16 @@ module.exports = function( options ) {
           if( user ) {
             if( user.admin ) return next();
 
-            user.admin = true
+            user.admin = true;
             return user.save$(next)
           }
 
-          userdata.password = _.isString(options.user.password) ? options.user.password : makepass()
+          userdata.password = _.isString(options.user.password) ? options.user.password : makepass();
 
           useract.register( userdata, function(err,out){
             if( err ) return done(err);
 
-            seneca.log.info('admin','user',out.user.nick,userdata.password)
+            seneca.log.info('admin','user',out.user.nick,userdata.password);
             return next();
           })
         })
@@ -164,10 +161,10 @@ module.exports = function( options ) {
 
   // FIX: serious hack here to disable old loghandlers
 
-  var activelogs = {}
-  var loghandlers = {}
+  var activelogs = {};
+  var loghandlers = {};
   function loghandler(client) {
-    var code = activelogs['admin-log-'+client.id] = nid()    
+    var code = activelogs['admin-log-'+client.id] = nid();
 
     var logh = function(){
       if( code == activelogs['admin-log-'+client.id] ) {
