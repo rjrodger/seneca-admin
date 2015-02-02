@@ -9,7 +9,6 @@
   var senecaAdminSummaryModule = angular.module('senecaAdminSummaryModule',[])
 
 
-
   senecaAdminSummaryModule.directive('senecaAdminSummary', ['$http',function($http) {
     var def = {
       restrict:'A',

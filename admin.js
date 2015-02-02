@@ -1,11 +1,11 @@
-/* Copyright (c) 2013 Richard Rodger, MIT License */
+/* Copyright (c) 2013-2015 Richard Rodger, MIT License */
 "use strict";
 
 
 var buffer  = require('buffer')
 var fs      = require('fs')
 
-var _            = require('underscore')
+var _            = require('lodash')
 var async        = require('async')
 var connect      = require('connect')
 var serve_static = require('serve-static')
@@ -51,7 +51,13 @@ module.exports = function( options ) {
     'data-editor'
   ])
 
+  // TODO: hack! deepextend needs to be fixed 
+  var http_server = options.server
+  delete options.server
+
   options = seneca.util.deepextend(defaultoptions,options)
+
+  options.server = http_server
 
 
   if( !options.local ) {
@@ -239,7 +245,6 @@ module.exports = function( options ) {
         }
       )
     }
-
 
     var app = connect()
     app.use(serve_static(__dirname+'/web'))

@@ -10,7 +10,7 @@ var assert  = require('chai').assert
 
 var gex     = require('gex')
 var async   = require('async')
-var _       = require('underscore')
+var _       = require('lodash')
 
 
 
@@ -29,13 +29,13 @@ function cberr(win){
 
 
 
-var si = seneca({trace_act_OFF:function(){
+var si = seneca({trace:{act_OFF:function(){
   var args = Array.prototype.slice.call(arguments,0)
   args.unshift(Date.now())
   var e = new Error()
   args.push(e.stack)
   console.log(args.join(' '))
-}})
+}}})
 si.use( 'user' )
 si.use( 'data-editor' )
 si.use( '..' )
