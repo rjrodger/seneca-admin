@@ -4,7 +4,8 @@
   "description": "Administration plugin for Seneca deployments",
   "main": "admin.js",
   "scripts": {
-    "test": "./node_modules/.bin/mocha test/*.test.js"
+    "test": "mocha test/*.test.js",
+    "coverage": "istanbul cover _mocha test/*.test.js && cat ./coverage/lcov.info | coveralls"
   },
   "repository": {
     "type": "git",
@@ -34,11 +35,13 @@
     "lodash": "~3.10.1"
   },
   "devDependencies": {
-    "gex": "~0.2.0",
     "chai": "~3.4.1",
+    "coveralls": "^2.11.6",
+    "gex": "~0.2.0",
+    "istanbul": "^0.4.1",
+    "mocha": "~2.3.4",
     "seneca": "plugin",
-    "seneca-user": "~0.2.10",
-    "mocha": "~2.3.4"
+    "seneca-user": "~0.2.10"
   },
   "files": [
     "README.md",
