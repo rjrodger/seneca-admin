@@ -1,17 +1,19 @@
+![Seneca](http://senecajs.org/files/assets/seneca-logo.png)
+> A [Seneca.js](http://senecajs.org) administration plugin
+
 # seneca-admin
+[![npm version][npm-badge]][npm-url]
+[![Build Status][travis-badge]][travis-url]
+[![Coverage Status][coveralls-badge]][coveralls-status]
 
-## An administration plugin for the [Seneca](http://senecajs.org) toolkit.
 
-For a working example, see the <a href="https://github.com/rjrodger/seneca-mvp">Seneca Minimum Viable Product example</a>.
+For a working example, see the [Seneca Minimum Viable Product example](https://github.com/rjrodger/seneca-mvp).
 
 
-## Support
+[npm-badge]: https://badge.fury.io/js/seneca-admin.svg
+[npm-url]: https://badge.fury.io/js/seneca-admin
+[travis-badge]: https://api.travis-ci.org/rjrodger/seneca-admin.svg
+[travis-url]: https://travis-ci.org/rjrodger/seneca-admin
+[coveralls-badge]:https://coveralls.io/repos/rjrodger/seneca-admin/badge.svg?branch=master&service=github
+[coveralls-url]: https://coveralls.io/github/rjrodger/seneca-admin?branch=master
 
-If you're using this module, feel free to contact me on Twitter if you
-have any questions! :) [@rjrodger](http://twitter.com/rjrodger)
-
-Current Version: 0.2.0
-
-Tested on: Node 0.10.36, Seneca 0.6.1
-
-[![Build Status](https://travis-ci.org/rjrodger/seneca-admin.png?branch=master)](https://travis-ci.org/rjrodger/seneca-admin)
