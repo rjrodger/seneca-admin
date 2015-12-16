@@ -18,24 +18,27 @@
   ],
   "author": "Richard Rodger (http://richardrodger.com)",
   "license": "MIT",
+  "engines": {
+    "node": ">=4.0.0"
+  },
   "dependencies": {
-    "async": "~0.9.0",
-    "connect": "~3.0.2",
-    "jsonic": "~0.1.2",
+    "async": "~1.5.0",
+    "connect": "~3.4.0",
+    "jsonic": "~0.2.2",
     "nid": "~0.3.2",
     "seneca-data-editor": "~0.2.0",
     "seneca-jsonrest-api": "~0.3.1",
-    "seneca-perm": "~0.4.0",
+    "seneca-perm": "~0.5.6",
     "serve-static": "^1.8.0",
     "sockjs": "~0.3.12",
-    "lodash": "~2.4.1"
+    "lodash": "~3.10.1"
   },
   "devDependencies": {
     "gex": "~0.2.0",
-    "chai": "~1.9.1",
+    "chai": "~3.4.1",
     "seneca": "plugin",
     "seneca-user": "~0.2.10",
-    "mocha": "~1.20.1"
+    "mocha": "~2.3.4"
   },
   "files": [
     "README.md",
