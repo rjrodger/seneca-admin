@@ -4,8 +4,8 @@
 # seneca-admin
 [![npm version][npm-badge]][npm-url]
 [![Build Status][travis-badge]][travis-url]
-[![Coverage Status][coveralls-badge]][coveralls-status]
-
+[![Coverage Status][coveralls-badge]][coveralls-url]
+[![Dependency Status][david-badge]][david-url]
 
 For a working example, see the [Seneca Minimum Viable Product example](https://github.com/rjrodger/seneca-mvp).
 
@@ -16,4 +16,5 @@ For a working example, see the [Seneca Minimum Viable Product example](https://g
 [travis-url]: https://travis-ci.org/rjrodger/seneca-admin
 [coveralls-badge]:https://coveralls.io/repos/rjrodger/seneca-admin/badge.svg?branch=master&service=github
 [coveralls-url]: https://coveralls.io/github/rjrodger/seneca-admin?branch=master
-
+[david-badge]: https://david-dm.org/rjrodger/seneca-admin.svg
+[david-url]: https://david-dm.org/rjrodger/seneca-admin
