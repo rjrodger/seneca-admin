@@ -129,7 +129,7 @@ module.exports = function( options ) {
 
     function loadcontent() {
 
-      seneca.act({role:'util',note:true,cmd:'list',key:'admin/units',default$:{}}, function(err,out){
+      seneca.act({role:'basic',note:true,cmd:'list',key:'admin/units',default$:{}}, function(err,out){
         if(err) return done(err);
 
         if( out ) {
